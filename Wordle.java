@@ -83,9 +83,9 @@ w = w.toLowerCase();
 	uGuess=w;
 for ( int i = 0 ; i < 5; i++) {
 	if (wordlewords[randomNum].indexOf(w.charAt(i))==i) {	//checks if they are the same letter in same spot
-		result += " ✔️ ";}
+		result += " ✅ ";}
 		else if (wordlewords[randomNum].indexOf(w.charAt(i))!= -1){	// checks if there is a letter in the answer
-			result += (" 🟨😍 ");}
+			result += (" 🟨 ");}
 		else 
 			result +=(" ❌ ");
 			
