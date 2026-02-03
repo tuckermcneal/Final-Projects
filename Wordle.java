@@ -1,47 +1,54 @@
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
+import java.util.ArrayList;
 import java.util.Random;
 public class Wordle {
 
 	private int guesses = 0;
-	private String[] wordlewords = new String[60];
+	private ArrayList<String> wordle_words = new ArrayList<>();
 	private int randomNum;
-	private String g="";
-	private String uGuess = "";
+	private String user_guess="";
 	private int realguesses = 0;
-	public Wordle(int a) {
+	public Wordle(int ans) {
 
 		///Decide what mode game is in
-		if(a==1) 
+		if(ans==1) 
 			guesses = 8; //easy
-		else if(a==2)
+		else if(ans==2)
 				guesses = 6;  //normal
 		else 
 			guesses = 4;	//hard
 		
+		
+		
+		
 		Random rand  = new Random();
-		randomNum = rand.nextInt(0,60);//creates a random number so i can get the word for the wordle 	
-		wordlewords = this.readfile();  // reads file
-		wordlewords[randomNum]= wordlewords[randomNum].toLowerCase(); // sets the answer to all lowercase
+		
+		wordle_words = this.readfile();  // reads file
+		randomNum = rand.nextInt(0,wordle_words.size());//creates a random number so i can get the word for the wordle 	
+	
 		this.play();
+	
+
+		
 		
 	}
 
-public static String [] readfile()  {	//takes in file and sorts it into an array
+public static ArrayList<String> readfile()  {	//takes in file and sorts it into an array
 	
-	String[] words = new String[60];  
+	ArrayList<String> word_list = new ArrayList<>();
 	FileReader file;
 	try {
 		file = new FileReader("wordle_words.txt");
 		Scanner read = new Scanner(file);
 	
-	int i = 0;
+	
 	while(read.hasNext()) {  //while there is another line the array fills up
-		
 		String line = read.nextLine();
-		words[i]=line;//assign words to specific spots in array	
-	i++;
+		line = line.toLowerCase();
+		word_list.add(line); //assign words to specific spots in arraylist
+	
 	
 	}}
 	
@@ -49,42 +56,44 @@ public static String [] readfile()  {	//takes in file and sorts it into an array
 		e.printStackTrace();
 	}
 		
-	return words; // returns the filled array 
+	return word_list;// returns the filled array 
 }
 
 public void play() { //starts the game
 	Scanner scan = new Scanner(System.in);
 		
-	while (g.equalsIgnoreCase(wordlewords[randomNum])!= true ) { // while the answer doesnt equal the users input
+	while (user_guess.equalsIgnoreCase(wordle_words.get(randomNum))!= true ) { // while the answer doesnt equal the users input
 		if ( guesses > 0) {
 				System.out.println("Enter your guess");
-					g = scan.next();
+					user_guess = scan.next();
 					guesses--;
 					realguesses++;
-			 while (g.length()!= 5) {//while the length of the user input isnt 5
+			 while (user_guess.length()!= 5) {//while the length of the user input isnt 5
 				 System.out.println("Invalid input...go again");
-				 	g=scan.next();	}		
+				 	user_guess=scan.next();	}		
 			 
-			 	System.out.println(this.checkword(g));		//activates method to check word
+			 	System.out.println(this.checkword(user_guess));		//activates method to check word
+			 	if(user_guess.equals(wordle_words.get(randomNum))!= true)
 			 	System.out.println("You have "+ guesses+ " guesses left!");
 		}
-		else 
-			g= wordlewords[randomNum];
+		else {
+			break;
+		}
 	}
-		if(uGuess.equals(wordlewords[randomNum])) {			// asks if guess is equal to answer to determine winner
+		if(user_guess.equals(wordle_words.get(randomNum))) {			// asks if guess is equal to answer to determine winner
 	System.out.println("You have won! That took "+ realguesses + " guesses!");}
 		else	
-			System.out.println("You have ran out of guesses, the word was "+ wordlewords[randomNum]);
+			System.out.println("You have ran out of guesses, the word was "+ wordle_words.get(randomNum));
 } 
 
-public String checkword(String w) { // checks word with the answer
+public String checkword(String input_word) { // checks word with the answer
 	String result = "";
-w = w.toLowerCase();
-	uGuess=w;
+	input_word = input_word.toLowerCase();
+	
 for ( int i = 0 ; i < 5; i++) {
-	if (wordlewords[randomNum].indexOf(w.charAt(i))==i) {	//checks if they are the same letter in same spot
-		result += " ✅ ";}
-		else if (wordlewords[randomNum].indexOf(w.charAt(i))!= -1){	// checks if there is a letter in the answer
+	if (wordle_words.get(randomNum).indexOf(input_word.charAt(i))==i) {	//checks if they are the same letter in same spot
+		result += " ✅️ ";}
+		else if (wordle_words.get(randomNum).indexOf(input_word.charAt(i))!= -1){	// checks if there is a letter in the answer
 			result += (" 🟨 ");}
 		else 
 			result +=(" ❌ ");
